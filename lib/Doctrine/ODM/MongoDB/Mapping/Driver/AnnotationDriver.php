@@ -27,9 +27,9 @@ require __DIR__ . '/DoctrineAnnotations.php';
 /**
  * The AnnotationDriver reads the mapping metadata from docblock annotations.
  *
- * @license 	http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link    	www.doctrine-project.org
- * @since   	1.0
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.doctrine-project.org
+ * @since       1.0
  * @version     $Revision$
  * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
@@ -92,7 +92,6 @@ class AnnotationDriver implements Driver
         $reflClass = $class->getReflectionClass();
 
         $classAnnotations = $this->_reader->getClassAnnotations($reflClass);
-
         if (isset($classAnnotations['Doctrine\ODM\MongoDB\Mapping\Document'])) {
             $documentAnnot = $classAnnotations['Doctrine\ODM\MongoDB\Mapping\Document'];
             if ($documentAnnot->db) {
@@ -127,6 +126,10 @@ class AnnotationDriver implements Driver
                 $class->setDiscriminatorMap($discrMapAnnot->value);
             }
 
+        } else if (isset($classAnnotations['Doctrine\ODM\MongoDB\Mapping\MappedSuperclass'])) {
+            $class->isMappedSuperclass = true;
+        } else if (isset($classAnnotations['Doctrine\ODM\MongoDB\Mapping\EmbeddedDocument'])) {
+            $class->isEmbeddedDocument = true;
         }
 
         foreach ($reflClass->getProperties() as $property) {

@@ -207,6 +207,20 @@ class ClassMetadata
     public $reflClass;
 
     /**
+     * READ-ONLY: Whether this class describes the mapping of a mapped superclass.
+     *
+     * @var boolean
+     */
+    public $isMappedSuperclass = false;
+
+    /**
+     * READ-ONLY: Whether this class describes the mapping of a embedded document.
+     *
+     * @var boolean
+     */
+    public $isEmbeddedDocument = false;
+
+    /**
      * Initializes a new ClassMetadata instance that will hold the object-document mapping
      * metadata of the class with the given name.
      *
@@ -224,15 +238,10 @@ class ClassMetadata
             $e = array_map(function($value) {
                 return strtolower($value);
             }, $e);
-
             $collection = array_pop($e);
-            $database = implode('_', $e);
         } else {
-            $database = 'doctrine';
             $collection = strtolower($documentName);
         }
-
-        $this->setDB($database);
         $this->setCollection($collection);
     }
 
@@ -544,7 +553,7 @@ class ClassMetadata
         if (isset($mapping['name'])) {
             $mapping['fieldName'] = $mapping['name'];
         }
-		$mapping['name'] = $mapping['fieldName'];
+        $mapping['name'] = $mapping['fieldName'];
         if (isset($this->fieldMappings[$mapping['fieldName']])) {
             $mapping = array_merge($mapping, $this->fieldMappings[$mapping['fieldName']]);
         }
@@ -831,6 +840,10 @@ class ClassMetadata
             $serialized[] = 'discriminatorMap';
             $serialized[] = 'parentClasses';
             $serialized[] = 'subClasses';
+        }
+
+        if ($this->isMappedSuperclass) {
+            $serialized[] = 'isMappedSuperclass';
         }
 
         return $serialized;

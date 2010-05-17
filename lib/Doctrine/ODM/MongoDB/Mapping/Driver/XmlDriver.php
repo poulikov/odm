@@ -49,15 +49,21 @@ class XmlDriver extends AbstractFileDriver
             return;
         }
 
+        if ($xmlRoot->getName() == 'document') {
+            if (isset($xmlRoot['repository-class'])) {
+                $class->setCustomRepositoryClass((string) $xmlRoot['repository-class']);
+            }
+        } elseif ($xmlRoot->getName() == 'mapped-superclass') {
+            $class->isMappedSuperclass = true;
+        } elseif ($xmlRoot->getName() == 'embedded-document') {
+            $class->isEmbeddedDocument = true;
+        }
 
         if (isset($xmlRoot['db'])) {
             $class->setDB((string) $xmlRoot['db']);
         }
         if (isset($xmlRoot['collection'])) {
             $class->setCollection((string) $xmlRoot['collection']);
-        }
-        if (isset($xmlRoot['repository-class'])) {
-            $class->setCustomRepositoryClass((string) $xmlRoot['repository-class']);
         }
         if (isset($xmlRoot['indexes'])) {
             foreach($xmlRoot['indexes'] as $index) {

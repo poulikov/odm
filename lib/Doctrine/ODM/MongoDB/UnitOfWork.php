@@ -736,7 +736,7 @@ class UnitOfWork
         } else {
             foreach ($class->fieldMappings as $mapping) {
                 $rawValue = $class->getFieldValue($doc, $mapping['fieldName']);
-                if (!isset($rawValue)) {
+                if ( ! isset($rawValue)) {
                     continue;
                 }
                 if (isset($mapping['embedded']) || isset($mapping['reference'])) {
@@ -837,7 +837,13 @@ class UnitOfWork
             $this->_addDependencies($class, $calc);
         }
 
-        return $calc->getCommitOrder();
+        $classes = $calc->getCommitOrder();
+        foreach ($classes as $key => $class) {
+            if ($class->isEmbeddedDocument) {
+                unset($classes[$key]);
+            }
+        }
+        return array_values($classes);
     }
 
     /**
@@ -855,7 +861,7 @@ class UnitOfWork
                 if ( ! $calc->hasClass($targetClass->name)) {
                     $calc->addClass($targetClass);
                 }
-                if (!$calc->hasDependency($targetClass, $class)) {
+                if ( ! $calc->hasDependency($targetClass, $class)) {
                     $calc->addDependency($targetClass, $class);
                 }
             }
@@ -864,7 +870,7 @@ class UnitOfWork
                 if ( ! $calc->hasClass($targetClass->name)) {
                     $calc->addClass($targetClass);
                 }
-                if (!$calc->hasDependency($targetClass, $class)) {
+                if ( ! $calc->hasDependency($targetClass, $class)) {
                     $calc->addDependency($targetClass, $class);
                 }
 
@@ -1511,7 +1517,7 @@ class UnitOfWork
     {
         $class = $this->_dm->getClassMetadata(get_class($document));
         foreach ($class->fieldMappings as $mapping) {
-            if (!isset($mapping['embedded']) && (!isset($mapping['reference']) || ! $mapping['isCascadeDetach'])) {
+            if ( ! isset($mapping['embedded']) && (!isset($mapping['reference']) || ! $mapping['isCascadeDetach'])) {
                 continue;
             }
             if (isset($mapping['embedded'])) {
@@ -1555,7 +1561,7 @@ class UnitOfWork
     {
         $class = $this->_dm->getClassMetadata(get_class($document));
         foreach ($class->fieldMappings as $mapping) {
-            if (!isset($mapping['embedded']) && (!isset($mapping['reference']) || ! $mapping['isCascadeMerge'])) {
+            if ( ! isset($mapping['embedded']) && (!isset($mapping['reference']) || ! $mapping['isCascadeMerge'])) {
                 continue;
             }
             if (isset($mapping['embedded'])) {
@@ -1599,7 +1605,7 @@ class UnitOfWork
     {
         $class = $this->_dm->getClassMetadata(get_class($document));
         foreach ($class->fieldMappings as $mapping) {
-            if (!isset($mapping['embedded']) && (!isset($mapping['reference']) || !$mapping['isCascadePersist'])) {
+            if ( ! isset($mapping['embedded']) && (!isset($mapping['reference']) || !$mapping['isCascadePersist'])) {
                 continue;
             }
             if (isset($mapping['embedded'])) {
@@ -1642,7 +1648,7 @@ class UnitOfWork
     {
         $class = $this->_dm->getClassMetadata(get_class($document));
         foreach ($class->fieldMappings as $mapping) {
-            if (!isset($mapping['embedded']) && (!isset($mapping['reference']) || ! $mapping['isCascadeRemove'])) {
+            if ( ! isset($mapping['embedded']) && (!isset($mapping['reference']) || ! $mapping['isCascadeRemove'])) {
                 continue;
             }
             if (isset($mapping['embedded'])) {

@@ -5,12 +5,12 @@ namespace Documents;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 
 /**
- * @Document(db="doctrine_odm_tests", collection="users")
+ * @Document(collection="users")
  * @InheritanceType("COLLECTION_PER_CLASS")
  * @DiscriminatorField(fieldName="type")
  * @DiscriminatorMap({"special"="Documents\SpecialUser"})
  */
-class User
+class User extends BaseDocument
 {
     /** @Id */
     protected $id;

@@ -158,7 +158,9 @@ class ClassMetadataFactory
         foreach ($parentClasses as $className) {
             if (isset($this->_loadedMetadata[$className])) {
                 $parent = $this->_loadedMetadata[$className];
-                array_unshift($visited, $className);
+                if ( ! $parent->isMappedSuperclass) {
+                    array_unshift($visited, $className);
+                }
                 continue;
             }
 
@@ -192,7 +194,9 @@ class ClassMetadataFactory
 
             $parent = $class;
 
-            array_unshift($visited, $className);
+            if ( ! $class->isMappedSuperclass) {
+                array_unshift($visited, $className);
+            }
 
             $loaded[] = $className;
         }
