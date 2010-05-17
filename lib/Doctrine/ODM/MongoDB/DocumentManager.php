@@ -527,4 +527,12 @@ class DocumentManager
     {
         $this->_unitOfWork->clear();
     }
+    public function realDbNameFor($dbName)
+    {
+        return sprintf('%s%s%s', 
+            $this->_config->getPrefixDbName(), 
+            $dbName,
+            $this->_config->getSuffixDbName()
+        );
+    }
 }
